@@ -1,0 +1,40 @@
+name: SonarQube Cloud
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  sonar:
+    name: SonarQube analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Compile Java sources
+        working-directory: gestion_bib
+        run: |
+          mkdir -p out/production/gestion_bib
+          javac -d out/production/gestion_bib src/*.java
+
+      - name: Analyze with SonarQube Cloud
+        uses: SonarSource/sonarqube-scan-action@v8.4.0
+        with:
+          projectBaseDir: gestion_bib
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
