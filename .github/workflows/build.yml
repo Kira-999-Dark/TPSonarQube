@@ -32,6 +32,11 @@ jobs:
           mkdir -p out/production/gestion_bib
           javac -d out/production/gestion_bib src/*.java
 
+      - name: Diagnose SonarCloud access
+        run: python3 .github/sonar_access_check.py
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
       - name: Analyze with SonarQube Cloud
         uses: SonarSource/sonarqube-scan-action@v8.4.0
         with:
