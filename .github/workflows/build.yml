@@ -45,3 +45,8 @@ jobs:
             -Dsonar.scanner.skipJreProvisioning=true
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Capture analysis results for the lab report
+        run: python3 .github/sonar_results.py
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
