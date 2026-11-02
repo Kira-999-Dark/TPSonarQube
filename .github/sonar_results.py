@@ -38,14 +38,24 @@ else:
     raise TimeoutError("SonarCloud processing did not finish within five minutes")
 
 project = urllib.parse.quote(metadata["projectKey"], safe="")
+branch = urllib.parse.quote(os.environ["GITHUB_REF_NAME"], safe="")
+notice("TP SonarCloud analysis", {key: task.get(key) for key in
+                                 ("componentKey", "branch", "branchType", "analysisId", "status")})
+branches = get(f"https://sonarcloud.io/api/project_branches/list?project={project}")
+notice("TP SonarCloud branches", [{key: item.get(key) for key in
+                                  ("name", "isMain", "type", "analysisDate")}
+                                 for item in branches["branches"]])
 metrics = ("bugs,vulnerabilities,code_smells,ncloc,duplicated_lines_density,coverage,"
            "complexity,cognitive_complexity,sqale_index,security_hotspots")
-measures = get(f"https://sonarcloud.io/api/measures/component?component={project}&metricKeys={metrics}")
+measures = get(f"https://sonarcloud.io/api/measures/component?component={project}&branch={branch}&metricKeys={metrics}")
 notice("TP SonarCloud measures", {item["metric"]: item.get("value")
                                  for item in measures["component"]["measures"]})
+files = get(f"https://sonarcloud.io/api/measures/component_tree?component={project}&branch={branch}&metricKeys=ncloc,complexity,cognitive_complexity&qualifiers=FIL&ps=100")
+notice("TP SonarCloud files", [{"path": item.get("path"), "measures": item.get("measures")}
+                              for item in files["components"]])
 gate = get("https://sonarcloud.io/api/qualitygates/project_status?analysisId=" + task["analysisId"])
 notice("TP SonarCloud quality gate", gate["projectStatus"])
-issues = get(f"https://sonarcloud.io/api/issues/search?componentKeys={project}&resolved=false&ps=100")
+issues = get(f"https://sonarcloud.io/api/issues/search?componentKeys={project}&branch={branch}&resolved=false&ps=100")
 notice("TP SonarCloud issues", [{key: issue.get(key) for key in
                                 ("rule", "type", "severity", "component", "line", "message")}
                                for issue in issues["issues"]])
