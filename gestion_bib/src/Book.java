@@ -1,17 +1,14 @@
-// Classe représentant un livre classique
 class Book implements Lendable {
-    private String title;
-    private String author;
+    private final String title;
+    private final String author;
     private boolean borrowed;
 
-    // Constructeur
     public Book(String title, String author) {
         this.title = title;
         this.author = author;
         this.borrowed = false;
     }
 
-    // Méthodes de l'interface
     @Override
     public void borrow() {
         if (!borrowed) {
@@ -30,21 +27,32 @@ class Book implements Lendable {
         }
     }
 
-    // Getters
-    public String getTitle() { return title; }
-    public String getAuthor() { return author; }
-    public boolean isBorrowed() { return borrowed; }
+    public String getTitle() {
+        return title;
+    }
 
-    // Méthode volontairement complexe pour le TP
+    public String getAuthor() {
+        return author;
+    }
+
+    @Override
+    public boolean isBorrowed() {
+        return borrowed;
+    }
+
     public void complexMethodExample(int n) {
         for (int i = 0; i < n; i++) {
-            if (i % 2 == 0) {
-                System.out.println(i + " is even");
-            } else if (i % 3 == 0) {
-                System.out.println(i + " divisible by 3");
-            } else {
-                System.out.println(i + " something else");
-            }
+            System.out.println(i + " " + describeNumber(i));
         }
+    }
+
+    private String describeNumber(int number) {
+        if (number % 2 == 0) {
+            return "is even";
+        }
+        if (number % 3 == 0) {
+            return "divisible by 3";
+        }
+        return "something else";
     }
 }

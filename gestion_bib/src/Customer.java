@@ -2,18 +2,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Customer {
-    private String name;
-    private List<Lendable> checkedOutItems;
+    private final String name;
+    private final List<Lendable> checkedOutItems;
 
     public Customer(String name) {
         this.name = name;
         checkedOutItems = new ArrayList<>();
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void checkOutItem(Lendable item) {
-        if (!checkedOutItems.contains(item)) {
-            checkedOutItems.add(item);
+        if (!item.isBorrowed() && !checkedOutItems.contains(item)) {
             item.borrow();
+            checkedOutItems.add(item);
         }
     }
 

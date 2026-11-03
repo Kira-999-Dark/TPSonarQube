@@ -1,6 +1,5 @@
-// Classe représentant un livre numérique
 class DigitalBook extends Book {
-    private int fileSizeMB;
+    private final int fileSizeMB;
 
     public DigitalBook(String title, String author, int fileSizeMB) {
         super(title, author);
