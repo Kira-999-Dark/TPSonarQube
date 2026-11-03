@@ -31,6 +31,16 @@ jobs:
           mkdir -p out/production/gestion_bib
           javac --release 17 -d out/production/gestion_bib src/*.java
 
+      - name: Run regression checks and measure coverage
+        working-directory: gestion_bib
+        run: |
+          mkdir -p out/test out/coverage
+          curl --fail --silent --show-error --location https://repo.maven.apache.org/maven2/org/jacoco/org.jacoco.agent/0.8.16/org.jacoco.agent-0.8.16-runtime.jar --output out/coverage/agent.jar
+          curl --fail --silent --show-error --location https://repo.maven.apache.org/maven2/org/jacoco/org.jacoco.cli/0.8.16/org.jacoco.cli-0.8.16-nodeps.jar --output out/coverage/cli.jar
+          javac --release 17 -cp out/production/gestion_bib -d out/test test/*.java
+          java -javaagent:out/coverage/agent.jar=destfile=out/coverage/jacoco.exec -cp out/production/gestion_bib:out/test LibraryRegression
+          java -jar out/coverage/cli.jar report out/coverage/jacoco.exec --classfiles out/production/gestion_bib --sourcefiles src --xml out/coverage/report.xml --html out/coverage/html
+
       - name: Analyze with SonarQube Cloud
         uses: SonarSource/sonarqube-scan-action@v8.4.0
         with:
