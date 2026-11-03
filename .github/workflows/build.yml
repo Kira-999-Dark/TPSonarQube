@@ -36,6 +36,11 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+      - name: Select the built-in Java profile for the lab
+        run: python3 .github/sonar_profile.py
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
       - name: Analyze with SonarQube Cloud
         uses: SonarSource/sonarqube-scan-action@v8.4.0
         with:
