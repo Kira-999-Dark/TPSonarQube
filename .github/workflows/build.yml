@@ -3,17 +3,16 @@ name: SonarQube Cloud
 on:
   push:
     branches: [main]
-  pull_request:
-    types: [opened, synchronize, reopened]
 
 permissions:
   contents: read
-  pull-requests: read
 
 jobs:
   sonar:
     name: SonarQube analysis
     runs-on: ubuntu-latest
+    env:
+      SONAR_ANALYSIS_BRANCH: master
     steps:
       - name: Check out source
         uses: actions/checkout@v7
@@ -43,6 +42,7 @@ jobs:
           projectBaseDir: gestion_bib
           args: >
             -Dsonar.scanner.skipJreProvisioning=true
+            -Dsonar.branch.name=master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 

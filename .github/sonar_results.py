@@ -38,7 +38,7 @@ else:
     raise TimeoutError("SonarCloud processing did not finish within five minutes")
 
 project = urllib.parse.quote(metadata["projectKey"], safe="")
-branch = urllib.parse.quote(os.environ["GITHUB_REF_NAME"], safe="")
+branch = urllib.parse.quote(os.environ.get("SONAR_ANALYSIS_BRANCH", os.environ["GITHUB_REF_NAME"]), safe="")
 notice("TP SonarCloud analysis", {key: task.get(key) for key in
                                  ("componentKey", "branch", "branchType", "analysisId", "status")})
 branches = get(f"https://sonarcloud.io/api/project_branches/list?project={project}")
