@@ -69,8 +69,12 @@ public class LibraryRegression {
         Library library = new Library();
         library.addItem(new Book("Titre", "Auteur"));
         library.addItem(new Lendable() {
-            public void borrow() { }
-            public void returnItem() { }
+            public void borrow() {
+                throw new UnsupportedOperationException("This fixture is only used to check listing.");
+            }
+            public void returnItem() {
+                throw new UnsupportedOperationException("This fixture is only used to check listing.");
+            }
             public boolean isBorrowed() { return false; }
         });
         String listing = capture(library::listAllItems);
