@@ -29,7 +29,7 @@ jobs:
         working-directory: gestion_bib
         run: |
           mkdir -p out/production/gestion_bib
-          javac -d out/production/gestion_bib src/*.java
+          javac --release 17 -d out/production/gestion_bib src/*.java
 
       - name: Diagnose SonarCloud access
         run: python3 .github/sonar_access_check.py
